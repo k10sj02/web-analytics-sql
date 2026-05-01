@@ -649,7 +649,7 @@ if page == "📊 Overview":
             labels={"page": "", "visits": "Visits"},
         )
         fig.update_layout(**PT, showlegend=False, height=280)
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
     with col2:
         st.markdown(
@@ -674,7 +674,7 @@ if page == "📊 Overview":
             margin=dict(t=16, b=16, l=8, r=8),
             height=280,
         )
-        st.plotly_chart(fig2, use_container_width=True)
+        st.plotly_chart(fig2, width="stretch")
 
     st.markdown(
         """
@@ -714,12 +714,10 @@ ORDER BY revenue DESC;</div>""",
             unsafe_allow_html=True,
         )
 
-    df = query(
-        """SELECT device, SUM(conversion_amount) AS revenue,
+    df = query("""SELECT device, SUM(conversion_amount) AS revenue,
                   ROUND(AVG(conversion_amount),2) AS avg_gift_size,
                   COUNT(*) AS donation_count
-                  FROM conversions GROUP BY device ORDER BY revenue DESC"""
-    )
+                  FROM conversions GROUP BY device ORDER BY revenue DESC""")
 
     st.markdown(
         """
@@ -747,7 +745,7 @@ ORDER BY revenue DESC;</div>""",
                 labels={"device": "", metric: label},
             )
             fig.update_layout(**PT, showlegend=False, height=260)
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
 
     st.markdown("<hr class='div-line'>", unsafe_allow_html=True)
     st.markdown(
@@ -773,14 +771,12 @@ ORDER BY page_visits DESC;</div>""",
             unsafe_allow_html=True,
         )
 
-    df2 = query(
-        """WITH dps AS (
+    df2 = query("""WITH dps AS (
         SELECT p.page, c.device, COUNT(p.page_view_id) AS page_visits,
                ROW_NUMBER() OVER (PARTITION BY c.device ORDER BY COUNT(p.page_view_id) DESC) AS rn
         FROM page_views p INNER JOIN conversions c ON p.page_view_id = c.page_view_id
         GROUP BY p.page, c.device
-    ) SELECT page, device, page_visits FROM dps WHERE rn=1 ORDER BY page_visits DESC"""
-    )
+    ) SELECT page, device, page_visits FROM dps WHERE rn=1 ORDER BY page_visits DESC""")
 
     st.markdown(
         '<div class="how-to-read"><strong>How to read this chart:</strong> For each device, this shows the single most-visited page. Use this to personalize content by platform — if iOS users consistently land on Issues, that page\'s mobile experience deserves the most investment.</div>',
@@ -796,17 +792,17 @@ ORDER BY page_visits DESC;</div>""",
         labels={"device": "", "page_visits": "Visits", "page": "Top Page"},
     )
     fig3.update_layout(**PT, height=280)
-    st.plotly_chart(fig3, use_container_width=True)
+    st.plotly_chart(fig3, width="stretch")
 
     st.markdown(
         """
     <div class="insight">
       <div class="insight-title">Interpretation & Next Steps</div>
-      <span class="tag">iOS</span> Highest total revenue ($2,066) with frequent mid-size gifts — these users donate on the go. 
+      <span class="tag">iOS</span> Highest total revenue ($2,066) with frequent mid-size gifts — these users donate on the go.
       Prioritize frictionless mobile checkout and consider SMS/iMessage donation options to lower the barrier further.<br><br>
-      <span class="tag">Windows</span> Highest avg gift ($45) — likely older, higher-net-worth donors on desktops. 
+      <span class="tag">Windows</span> Highest avg gift ($45) — likely older, higher-net-worth donors on desktops.
       Fewer but larger gifts. Target with deeper mission content (blog, annual reports) and recurring giving prompts.<br><br>
-      <span class="tag tag-amber">Android</span> Lowest on both dimensions. Audit the Android donation flow for UX friction — 
+      <span class="tag tag-amber">Android</span> Lowest on both dimensions. Audit the Android donation flow for UX friction —
       slow load times or payment issues may be suppressing conversions that demographics would otherwise support.
     </div>
     """,
@@ -862,7 +858,7 @@ ORDER BY referral_count DESC;</div>""",
         fig.update_traces(texttemplate="%{text}%", textposition="outside")
         fig.update_layout(**PT, showlegend=False, height=320)
         fig.update_yaxes(categoryorder="total ascending", gridcolor="#f0eeea")
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
     with col2:
         fig2 = px.pie(
             df,
@@ -879,7 +875,7 @@ ORDER BY referral_count DESC;</div>""",
             margin=dict(t=16, b=16, l=8, r=8),
             height=320,
         )
-        st.plotly_chart(fig2, use_container_width=True)
+        st.plotly_chart(fig2, width="stretch")
 
     google_share = df.loc[df["referrer"] == "google", "share"].values[0]
     st.markdown(
@@ -888,10 +884,10 @@ ORDER BY referral_count DESC;</div>""",
       <div class="insight-title">Interpretation & Next Steps</div>
       <span class="tag">Google</span> accounts for {google_share}% of all referrals — organic search is by far the dominant channel.
       Double down with SEO: optimize page titles, meta descriptions, and structured data especially on high-traffic pages.<br><br>
-      <span class="tag">Twitter / Facebook</span> contribute marginally (≈10% combined). Before scaling spend here, 
+      <span class="tag">Twitter / Facebook</span> contribute marginally (≈10% combined). Before scaling spend here,
       measure their downstream conversion rate — social referrals often have lower intent than search.<br><br>
-      <span class="tag tag-amber">Instagram</span> drives the fewest referrals despite strong youth reach. 
-      The platform's link-in-bio friction and lifestyle-first content feed suppress advocacy clicks. 
+      <span class="tag tag-amber">Instagram</span> drives the fewest referrals despite strong youth reach.
+      The platform's link-in-bio friction and lifestyle-first content feed suppress advocacy clicks.
       A short-form video or influencer pilot could test whether this channel can be unlocked cost-effectively.
     </div>
     """,
@@ -1016,18 +1012,18 @@ ORDER BY month;</div>""",
     )
     fig.update_layout(**PT, height=340)
     fig.update_traces(line_width=2)
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
     st.markdown(
         """
     <div class="insight">
       <div class="insight-title">Interpretation & Next Steps</div>
-      <span class="tag tag-green">+25% Q1→Q2</span> homepage growth suggests a spring campaign landed well or 
+      <span class="tag tag-green">+25% Q1→Q2</span> homepage growth suggests a spring campaign landed well or
       a high-profile external event drove discovery. Correlate with campaign calendars to confirm the driver.<br><br>
-      Mid-year spikes on Issues and News point to event-driven traffic — content published around real-world moments 
-      pulls outsized visits. <strong>Build an editorial calendar</strong> that anticipates high-interest periods and has 
+      Mid-year spikes on Issues and News point to event-driven traffic — content published around real-world moments
+      pulls outsized visits. <strong>Build an editorial calendar</strong> that anticipates high-interest periods and has
       content ready to publish.<br><br>
-      Blog traffic is relatively flat — consider whether it's serving a SEO/retention role (acceptable) or 
+      Blog traffic is relatively flat — consider whether it's serving a SEO/retention role (acceptable) or
       whether it's being neglected as a conversion tool (opportunity).
     </div>
     """,
@@ -1109,14 +1105,14 @@ LIMIT 10;</div>""",
         )
         fig.update_traces(texttemplate="$%{text:,.0f}", textposition="outside")
         fig.update_layout(**PT, coloraxis_showscale=False, height=340)
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
     with col2:
         st.markdown("**Top 10 donors**")
         st.dataframe(
             df[["user_id", "ltv", "gifts"]].rename(
                 columns={"user_id": "User ID", "ltv": "LTV ($)", "gifts": "# Gifts"}
             ),
-            use_container_width=True,
+            width="stretch",
             hide_index=True,
         )
 
@@ -1124,13 +1120,13 @@ LIMIT 10;</div>""",
         f"""
     <div class="insight">
       <div class="insight-title">Interpretation & Next Steps</div>
-      The top 10 donors represent <strong>{top10_pct:.0f}% of all revenue</strong> — a high concentration that 
+      The top 10 donors represent <strong>{top10_pct:.0f}% of all revenue</strong> — a high concentration that
       creates meaningful churn risk if even one or two lapse.<br><br>
-      <span class="tag">Action</span> Build donor personas for the top cohort: what device do they use? 
+      <span class="tag">Action</span> Build donor personas for the top cohort: what device do they use?
       What page did they first visit? What referral source brought them? Replicate those acquisition paths.<br><br>
-      <span class="tag tag-green">Retention</span> Implement a VIP engagement track for donors above a threshold LTV — 
+      <span class="tag tag-green">Retention</span> Implement a VIP engagement track for donors above a threshold LTV —
       personalized updates, impact reports, and early access to campaigns can meaningfully reduce churn.<br><br>
-      <span class="tag tag-amber">Expansion</span> Look for donors in positions 11–25 with high gift frequency but moderate LTV — 
+      <span class="tag tag-amber">Expansion</span> Look for donors in positions 11–25 with high gift frequency but moderate LTV —
       these are upgrade candidates who already have strong affinity.
     </div>
     """,
@@ -1206,7 +1202,7 @@ GROUP BY dow ORDER BY dow;</div>""",
             labels={"day": "", "views": "Page Views"},
         )
         fig.update_layout(**PT, coloraxis_showscale=False, height=300)
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
     with col2:
         st.markdown("**Donations by day**")
         fig2 = px.bar(
@@ -1219,18 +1215,18 @@ GROUP BY dow ORDER BY dow;</div>""",
             labels={"day": "", "gifts": "Gifts"},
         )
         fig2.update_layout(**PT, coloraxis_showscale=False, height=300)
-        st.plotly_chart(fig2, use_container_width=True)
+        st.plotly_chart(fig2, width="stretch")
 
     st.markdown(
         """
     <div class="insight">
       <div class="insight-title">Interpretation & Next Steps</div>
-      <span class="tag tag-green">Friday</span> is the single highest-traffic and highest-donation day — both browsing and 
+      <span class="tag tag-green">Friday</span> is the single highest-traffic and highest-donation day — both browsing and
       giving behavior peak as users wind down their work week with more leisure browsing time.<br><br>
-      <span class="tag">Tactic</span> Schedule email campaigns and social posts to land <strong>Thursday evening</strong> 
+      <span class="tag">Tactic</span> Schedule email campaigns and social posts to land <strong>Thursday evening</strong>
       so they surface in inboxes Friday morning. Any time-limited donation matches or appeals should go live Thursday–Friday.<br><br>
-      <span class="tag tag-amber">Weekend</span> traffic is moderate but not negligible. A Sunday re-engagement 
-      touchpoint (e.g. a "week ahead" newsletter) could capture users planning their week and convert 
+      <span class="tag tag-amber">Weekend</span> traffic is moderate but not negligible. A Sunday re-engagement
+      touchpoint (e.g. a "week ahead" newsletter) could capture users planning their week and convert
       passive interest into action before Monday fatigue sets in.
     </div>
     """,
@@ -1274,7 +1270,7 @@ elif page == "🔍 Query Explorer":
             try:
                 result = query(sql_input)
                 st.success(f"{len(result)} row(s) returned")
-                st.dataframe(result, use_container_width=True)
+                st.dataframe(result, width="stretch")
                 if len(result) > 1 and len(result.columns) == 2:
                     cx, cy = result.columns[0], result.columns[1]
                     if pd.api.types.is_numeric_dtype(result[cy]):
@@ -1282,7 +1278,7 @@ elif page == "🔍 Query Explorer":
                             result, x=cx, y=cy, color_discrete_sequence=["#2563eb"]
                         )
                         fig.update_layout(**PT, height=280)
-                        st.plotly_chart(fig, use_container_width=True)
+                        st.plotly_chart(fig, width="stretch")
             except Exception as e:
                 st.error(f"SQL error: {e}")
         else:
@@ -1310,7 +1306,7 @@ device             TEXT      -- ios | android | windows</div>""",
 st.markdown(
     """
 <div class="footer">
-  Web Analytics Dashboard &nbsp;·&nbsp; SQL Portfolio &nbsp;·&nbsp; Mar 2020 – Mar 2022 &nbsp;·&nbsp; Streamlit · Plotly · SQLite
+  Built by Stann-Omar Jones
 </div>
 """,
     unsafe_allow_html=True,
